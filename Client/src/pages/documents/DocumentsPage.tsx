@@ -37,6 +37,7 @@ export const DocumentsPage: React.FC = () => {
   const [documents, setDocuments] = useState<DocumentItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
+  const [shareOnUpload, setShareOnUpload] = useState(true);
   const [showSharedOnly, setShowSharedOnly] = useState(false);
   const [signingDocId, setSigningDocId] = useState<string | null>(null);
   const [signatureText, setSignatureText] = useState('');
@@ -57,7 +58,7 @@ export const DocumentsPage: React.FC = () => {
     setError('');
     setUploading(true);
     try {
-      await api.uploadDocument(file, false);
+      await api.uploadDocument(file, shareOnUpload);
       loadDocuments();
     } catch (err) {
       setError((err as Error).message);
@@ -92,7 +93,17 @@ export const DocumentsPage: React.FC = () => {
           <p className="text-gray-600">Manage your startup's important files</p>
         </div>
 
-        <div>
+        <div className="flex items-center gap-3">
+          <label className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={shareOnUpload}
+              onChange={(e) => setShareOnUpload(e.target.checked)}
+              className="rounded border-gray-300"
+            />
+            Share with connections
+          </label>
+
           <input
             ref={fileInputRef}
             type="file"

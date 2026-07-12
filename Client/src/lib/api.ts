@@ -98,5 +98,33 @@ export const api = {
   deleteDocument: (id: string) => request(`/documents/${id}`, { method: 'DELETE' }),
 
   signDocument: (id: string, signatureText: string) =>
-    request(`/documents/${id}/sign`, { method: 'POST', body: JSON.stringify({ signatureText }) })
+    request(`/documents/${id}/sign`, { method: 'POST', body: JSON.stringify({ signatureText }) }),
+
+  getMeetings: () => request('/meetings'),
+
+  createMeeting: (participantId: string, title: string, description: string, scheduledAt: string, durationMinutes: number) =>
+    request('/meetings', {
+      method: 'POST',
+      body: JSON.stringify({ participantId, title, description, scheduledAt, durationMinutes })
+    }),
+
+  updateMeeting: (id: string, updates: Record<string, unknown>) =>
+    request(`/meetings/${id}`, { method: 'PUT', body: JSON.stringify(updates) }),
+
+  deposit: (amount: number) =>
+    request('/transactions/deposit', { method: 'POST', body: JSON.stringify({ amount }) }),
+
+  withdraw: (amount: number) =>
+    request('/transactions/withdraw', { method: 'POST', body: JSON.stringify({ amount }) }),
+
+  transfer: (toUserId: string, amount: number, dealId?: string, note?: string) =>
+    request('/transactions/transfer', { method: 'POST', body: JSON.stringify({ toUserId, amount, dealId, note }) }),
+
+  getTransactions: () => request('/transactions'),
+
+  getNotifications: () => request('/notifications'),
+
+  markNotificationRead: (id: string) => request(`/notifications/${id}/read`, { method: 'PUT' }),
+
+  markAllNotificationsRead: () => request('/notifications/read-all', { method: 'PUT' })
 };

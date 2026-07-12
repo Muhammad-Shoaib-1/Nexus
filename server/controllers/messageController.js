@@ -1,5 +1,6 @@
 const Message = require('../models/Message');
 const { serializeUser } = require('../utils/serializeUser');
+const notify = require('../utils/notify');
 
 const serializeMessage = (doc) => {
   const obj = doc.toObject ? doc.toObject() : doc;
@@ -95,6 +96,14 @@ exports.sendMessage = async (req, res) => {
       senderId: req.user._id,
       receiverId,
       content: content.trim()
+    });
+
+    await notify({
+      userId: receiverId,
+      actorId: req.user._id,
+      type: 'message',
+      content: `${req.user.name} sent you a message`,
+      link: `/chat/${req.user._id}`
     });
 
     res.status(201).json({ message: serializeMessage(message) });

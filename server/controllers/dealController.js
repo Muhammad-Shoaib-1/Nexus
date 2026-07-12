@@ -1,5 +1,6 @@
 const Deal = require('../models/Deal');
 const { serializeUser } = require('../utils/serializeUser');
+const notify = require('../utils/notify');
 
 const serializeDeal = (doc) => {
   const obj = doc.toObject();
@@ -41,6 +42,14 @@ exports.createDeal = async (req, res) => {
       amount,
       equity,
       stage
+    });
+
+    await notify({
+      userId: entrepreneurId,
+      actorId: req.user._id,
+      type: 'deal',
+      content: `${req.user.name} created a deal for your startup ($${amount.toLocaleString()}, ${equity}% equity)`,
+      link: '/deals'
     });
 
     const populated = await deal.populate(['investorId', 'entrepreneurId']);

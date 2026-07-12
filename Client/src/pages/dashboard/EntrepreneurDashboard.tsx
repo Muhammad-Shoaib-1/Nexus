@@ -13,18 +13,24 @@ export const EntrepreneurDashboard: React.FC = () => {
   const { user } = useAuth();
   const [collaborationRequests, setCollaborationRequests] = useState<any[]>([]);
   const [recommendedInvestors, setRecommendedInvestors] = useState<any[]>([]);
+  const [upcomingMeetingsCount, setUpcomingMeetingsCount] = useState(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!user) return;
     const load = async () => {
       try {
-        const [{ requests }, { users }] = await Promise.all([
+        const [{ requests }, { users }, { meetings }] = await Promise.all([
           api.getRequestsForEntrepreneur(),
-          api.listUsers('investor')
+          api.listUsers('investor'),
+          api.getMeetings()
         ]);
         setCollaborationRequests(requests);
         setRecommendedInvestors(users.slice(0, 3));
+        const now = new Date();
+        setUpcomingMeetingsCount(
+          meetings.filter((m: any) => new Date(m.scheduledAt) >= now && m.status === 'accepted').length
+        );
       } finally {
         setLoading(false);
       }
@@ -95,8 +101,7 @@ export const EntrepreneurDashboard: React.FC = () => {
               </div>
               <div>
                 <p className="text-sm font-medium text-accent-700">Upcoming Meetings</p>
-                {/* Meetings feature not built yet (Week 2) — placeholder until real scheduling exists */}
-                <h3 className="text-xl font-semibold text-accent-900">—</h3>
+                <h3 className="text-xl font-semibold text-accent-900">{upcomingMeetingsCount}</h3>
               </div>
             </div>
           </CardBody>

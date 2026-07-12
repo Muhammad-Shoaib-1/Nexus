@@ -9,6 +9,9 @@ const collaborationRequestRoutes = require('./routes/collaborationRequestRoutes'
 const messageRoutes = require('./routes/messageRoutes');
 const dealRoutes = require('./routes/dealRoutes');
 const documentRoutes = require('./routes/documentRoutes');
+const meetingRoutes = require('./routes/meetingRoutes');
+const transactionRoutes = require('./routes/transactionRoutes');
+const notificationRoutes = require('./routes/notificationRoutes');
 
 const app = express();
 
@@ -29,6 +32,9 @@ app.use('/api/requests', collaborationRequestRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/deals', dealRoutes);
 app.use('/api/documents', documentRoutes);
+app.use('/api/meetings', meetingRoutes);
+app.use('/api/transactions', transactionRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 // 404 handler
 app.use((req, res) => res.status(404).json({ message: 'Route not found' }));

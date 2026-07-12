@@ -1,5 +1,6 @@
 const CollaborationRequest = require('../models/CollaborationRequest');
 const { serializeUser } = require('../utils/serializeUser');
+const notify = require('../utils/notify');
 
 // Converts a populated request doc into frontend-friendly shape: `id` instead
 // of `_id`, and populated investor/entrepreneur sub-docs run through serializeUser.
@@ -40,6 +41,14 @@ exports.createRequest = async (req, res) => {
       investorId: req.user._id,
       entrepreneurId,
       message: message || ''
+    });
+
+    await notify({
+      userId: entrepreneurId,
+      actorId: req.user._id,
+      type: 'collaboration_request',
+      content: `${req.user.name} sent you a collaboration request`,
+      link: `/dashboard/entrepreneur`
     });
 
     res.status(201).json({ request: serializeRequest(request) });
@@ -89,6 +98,14 @@ exports.updateRequestStatus = async (req, res) => {
 
     request.status = status;
     await request.save();
+
+    await notify({
+      userId: request.investorId,
+      actorId: req.user._id,
+      type: 'collaboration_request',
+      content: `${req.user.name} ${status} your collaboration request`,
+      link: `/dashboard/investor`
+    });
 
     res.json({ request: serializeRequest(request) });
   } catch (error) {

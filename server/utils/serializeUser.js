@@ -13,6 +13,7 @@ const serializeUser = (doc) => {
     avatarUrl: obj.avatarUrl || '',
     bio: obj.bio || '',
     isOnline: !!obj.isOnline,
+    walletBalance: obj.walletBalance ?? 0,
     createdAt: obj.createdAt ? new Date(obj.createdAt).toISOString() : new Date().toISOString()
   };
 

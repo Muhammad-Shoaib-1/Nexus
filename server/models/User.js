@@ -10,7 +10,8 @@ const userSchema = new mongoose.Schema(
     passwordHash: { type: String, required: true, select: false },
     avatarUrl: { type: String, default: '' },
     bio: { type: String, default: '' },
-    isOnline: { type: Boolean, default: false }
+    isOnline: { type: Boolean, default: false },
+    walletBalance: { type: Number, default: 0 } // cents-free simple USD balance for the payment sandbox
   },
   options
 );
