@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Menu, X, Bell, MessageCircle, User, LogOut, Building2, CircleDollarSign } from 'lucide-react';
+import {
+  Menu, X, Bell, MessageCircle, User, LogOut, Building2, CircleDollarSign,
+  Home, Users, Calendar, FileText, CreditCard, Settings, HelpCircle
+} from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { Avatar } from '../ui/Avatar';
 import { Button } from '../ui/Button';
@@ -28,7 +31,8 @@ export const Navbar: React.FC = () => {
   const profileRoute = user 
     ? `/profile/${user.role}/${user.id}` 
     : '/login';
-  
+
+  // Short list shown in the desktop top bar (the sidebar covers the rest on desktop)
   const navLinks = [
     {
       icon: user?.role === 'entrepreneur' ? <Building2 size={18} /> : <CircleDollarSign size={18} />,
@@ -50,6 +54,62 @@ export const Navbar: React.FC = () => {
       text: 'Profile',
       path: profileRoute,
     }
+  ];
+
+  // Full list for the mobile menu — this is the ONLY navigation mobile users
+  // have (the sidebar is desktop-only), so it must mirror everything the
+  // sidebar offers, not just a shortcut subset.
+  const mobileMainLinks = user ? [
+    {
+      icon: user.role === 'entrepreneur' ? <Home size={18} /> : <Home size={18} />,
+      text: 'Dashboard',
+      path: dashboardRoute,
+    },
+    {
+      icon: user.role === 'entrepreneur' ? <Building2 size={18} /> : <CircleDollarSign size={18} />,
+      text: user.role === 'entrepreneur' ? 'My Startup' : 'My Portfolio',
+      path: profileRoute,
+    },
+    {
+      icon: user.role === 'entrepreneur' ? <CircleDollarSign size={18} /> : <Users size={18} />,
+      text: user.role === 'entrepreneur' ? 'Find Investors' : 'Find Startups',
+      path: user.role === 'entrepreneur' ? '/investors' : '/entrepreneurs',
+    },
+    {
+      icon: <MessageCircle size={18} />,
+      text: 'Messages',
+      path: '/messages',
+    },
+    {
+      icon: <Calendar size={18} />,
+      text: 'Meetings',
+      path: '/meetings',
+    },
+    {
+      icon: <Bell size={18} />,
+      text: 'Notifications',
+      path: '/notifications',
+    },
+    {
+      icon: <FileText size={18} />,
+      text: 'Documents',
+      path: '/documents',
+    },
+    {
+      icon: <CircleDollarSign size={18} />,
+      text: 'Deals',
+      path: '/deals',
+    },
+    {
+      icon: <CreditCard size={18} />,
+      text: 'Payments',
+      path: '/payments',
+    }
+  ] : [];
+
+  const mobileSettingsLinks = [
+    { icon: <Settings size={18} />, text: 'Settings', path: '/settings' },
+    { icon: <HelpCircle size={18} />, text: 'Help & Support', path: '/help' }
   ];
   
   return (
@@ -132,7 +192,7 @@ export const Navbar: React.FC = () => {
       
       {/* Mobile menu */}
       {isMenuOpen && (
-        <div className="md:hidden bg-white border-b border-gray-200 animate-fade-in">
+        <div className="md:hidden bg-white border-b border-gray-200 animate-fade-in max-h-[80vh] overflow-y-auto">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
             {user ? (
               <>
@@ -150,7 +210,7 @@ export const Navbar: React.FC = () => {
                 </div>
                 
                 <div className="border-t border-gray-200 pt-2">
-                  {navLinks.map((link, index) => (
+                  {mobileMainLinks.map((link, index) => (
                     <Link
                       key={index}
                       to={link.path}
@@ -161,7 +221,21 @@ export const Navbar: React.FC = () => {
                       {link.text}
                     </Link>
                   ))}
-                  
+                </div>
+
+                <div className="border-t border-gray-200 pt-2">
+                  {mobileSettingsLinks.map((link, index) => (
+                    <Link
+                      key={index}
+                      to={link.path}
+                      className="flex items-center px-3 py-2 text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50 rounded-md"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <span className="mr-3">{link.icon}</span>
+                      {link.text}
+                    </Link>
+                  ))}
+
                   <button
                     onClick={() => {
                       handleLogout();

@@ -111,7 +111,7 @@ VITE_API_URL=http://localhost:5000/api
 npm run dev
 ```
 
-The app will be running at `http://localhost:5173`, with the API at `http://localhost:5000`.
+The app will be running at `https://nexus-alpha-vert-18.vercel.app`, with the API at `https://nexus-255d.onrender.com/api`.
 
 ---
 

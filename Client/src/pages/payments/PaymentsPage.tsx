@@ -114,21 +114,21 @@ export const PaymentsPage: React.FC = () => {
 
       {/* Wallet balance */}
       <Card className="bg-primary-600 text-black/70">
-        <CardBody className="flex items-center justify-between">
+        <CardBody className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="p-3 bg-white/20 rounded-full">
+            <div className="p-3 bg-white/20 rounded-full flex-shrink-0">
               <Wallet size={28} />
             </div>
             <div>
-              <p className="text-black text-primary-100">Wallet Balance</p>
+              <p className="text-sm text-black-100">Wallet Balance</p>
               <p className="text-3xl font-bold">${balance.toLocaleString()}</p>
             </div>
           </div>
 
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <Button
               variant="outline"
-              className="bg-black/30 border-black/70 text-white hover:bg-black/40"
+              className="bg-black/50 border-black/30 text-white hover:bg-black/70"
               leftIcon={<ArrowDownCircle size={18} />}
               onClick={() => setActiveForm('deposit')}
             >
@@ -136,7 +136,7 @@ export const PaymentsPage: React.FC = () => {
             </Button>
             <Button
               variant="outline"
-              className="bg-black/30 border-black/70 text-white hover:bg-black/30"
+              className="bg-black/50 border-black/30 text-white hover:bg-black/70"
               leftIcon={<ArrowUpCircle size={18} />}
               onClick={() => setActiveForm('withdraw')}
             >
@@ -144,7 +144,7 @@ export const PaymentsPage: React.FC = () => {
             </Button>
             <Button
               variant="outline"
-              className="bg-black/30 border-black/70 text-white hover:bg-black/40"
+              className="bg-black/50 border-black/30 text-white hover:bg-black/70"
               leftIcon={<Send size={18} />}
               onClick={() => setActiveForm('transfer')}
             >
