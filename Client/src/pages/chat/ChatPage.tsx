@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom';
-import { Send, Phone, Video, Info, Smile, MessageCircle } from 'lucide-react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { Send, Video, Smile, MessageCircle } from 'lucide-react';
 import { Avatar } from '../../components/ui/Avatar';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
@@ -12,6 +12,7 @@ import { api } from '../../lib/api';
 
 export const ChatPage: React.FC = () => {
   const { userId } = useParams<{ userId: string }>();
+  const navigate = useNavigate();
   const { user: currentUser } = useAuth();
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
@@ -75,14 +76,14 @@ export const ChatPage: React.FC = () => {
               </div>
 
               <div className="flex space-x-2">
-                <Button variant="ghost" size="sm" className="rounded-full p-2" aria-label="Voice call">
-                  <Phone size={18} />
-                </Button>
-                <Button variant="ghost" size="sm" className="rounded-full p-2" aria-label="Video call">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="rounded-full p-2"
+                  aria-label="Video call"
+                  onClick={() => navigate(`/call/${chatPartner.id}`)}
+                >
                   <Video size={18} />
-                </Button>
-                <Button variant="ghost" size="sm" className="rounded-full p-2" aria-label="Info">
-                  <Info size={18} />
                 </Button>
               </div>
             </div>

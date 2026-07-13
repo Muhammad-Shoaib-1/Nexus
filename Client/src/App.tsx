@@ -25,6 +25,7 @@ import { NotificationsPage } from './pages/notifications/NotificationsPage';
 import { DocumentsPage } from './pages/documents/DocumentsPage';
 import { MeetingsPage } from './pages/meetings/MeetingsPage';
 import { PaymentsPage } from './pages/payments/PaymentsPage';
+import { VideoCallPage } from './pages/call/VideoCallPage';
 import { SettingsPage } from './pages/settings/SettingsPage';
 import { HelpPage } from './pages/help/HelpPage';
 import { DealsPage } from './pages/deals/DealsPage';
@@ -40,6 +41,9 @@ function App() {
           {/* Authentication Routes */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+
+          {/* Video Call — fullscreen, not wrapped in DashboardLayout */}
+          <Route path="/call/:userId" element={<VideoCallPage />} />
           
           {/* Dashboard Routes */}
           <Route path="/dashboard" element={<DashboardLayout />}>

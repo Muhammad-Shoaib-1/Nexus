@@ -14,6 +14,7 @@ const serializeUser = (doc) => {
     bio: obj.bio || '',
     isOnline: !!obj.isOnline,
     walletBalance: obj.walletBalance ?? 0,
+    twoFactorEnabled: !!obj.twoFactorEnabled,
     createdAt: obj.createdAt ? new Date(obj.createdAt).toISOString() : new Date().toISOString()
   };
 

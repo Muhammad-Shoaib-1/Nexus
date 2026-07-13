@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, Clock, Plus, X, Check, XCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Calendar, Clock, Plus, X, Check, XCircle, Video } from 'lucide-react';
 import { Card, CardHeader, CardBody } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
@@ -21,6 +22,7 @@ interface Meeting {
 
 export const MeetingsPage: React.FC = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [meetings, setMeetings] = useState<Meeting[]>([]);
   const [loading, setLoading] = useState(true);
   const [connections, setConnections] = useState<any[]>([]);
@@ -143,8 +145,21 @@ export const MeetingsPage: React.FC = () => {
 
         {(meeting.status === 'pending' || meeting.status === 'accepted') && !isParticipant && (
           <div className="flex gap-2 mt-3 ml-14">
+            {meeting.status === 'accepted' && (
+              <Button size="sm" leftIcon={<Video size={14} />} onClick={() => navigate(`/call/${otherParty.id}`)}>
+                Join Video Call
+              </Button>
+            )}
             <Button size="sm" variant="outline" onClick={() => cancelMeeting(meeting.id)}>
               Cancel Meeting
+            </Button>
+          </div>
+        )}
+
+        {meeting.status === 'accepted' && isParticipant && (
+          <div className="flex gap-2 mt-3 ml-14">
+            <Button size="sm" leftIcon={<Video size={14} />} onClick={() => navigate(`/call/${otherParty.id}`)}>
+              Join Video Call
             </Button>
           </div>
         )}

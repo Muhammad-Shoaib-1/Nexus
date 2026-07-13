@@ -126,5 +126,14 @@ export const api = {
 
   markNotificationRead: (id: string) => request(`/notifications/${id}/read`, { method: 'PUT' }),
 
-  markAllNotificationsRead: () => request('/notifications/read-all', { method: 'PUT' })
+  markAllNotificationsRead: () => request('/notifications/read-all', { method: 'PUT' }),
+
+  send2FACode: (userId: string) =>
+    request('/auth/2fa/send-code', { method: 'POST', body: JSON.stringify({ userId }) }),
+
+  verify2FACode: (userId: string, code: string) =>
+    request('/auth/2fa/verify-code', { method: 'POST', body: JSON.stringify({ userId, code }) }),
+
+  toggle2FA: (enabled: boolean) =>
+    request('/auth/2fa/toggle', { method: 'PUT', body: JSON.stringify({ enabled }) })
 };

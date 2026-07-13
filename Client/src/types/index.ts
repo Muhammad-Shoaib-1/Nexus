@@ -8,6 +8,8 @@ export interface User {
   avatarUrl: string;
   bio: string;
   isOnline?: boolean;
+  walletBalance?: number;
+  twoFactorEnabled?: boolean;
   createdAt: string;
 }
 
@@ -70,7 +72,8 @@ export interface Document {
 
 export interface AuthContextType {
   user: User | null;
-  login: (email: string, password: string, role: UserRole) => Promise<void>;
+  login: (email: string, password: string, role: UserRole) => Promise<{ requires2FA: boolean; userId?: string }>;
+  verify2FA: (userId: string, code: string) => Promise<void>;
   register: (name: string, email: string, password: string, role: UserRole) => Promise<void>;
   logout: () => void;
   forgotPassword: (email: string) => Promise<void>;

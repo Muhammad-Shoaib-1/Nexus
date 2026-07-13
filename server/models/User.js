@@ -11,7 +11,8 @@ const userSchema = new mongoose.Schema(
     avatarUrl: { type: String, default: '' },
     bio: { type: String, default: '' },
     isOnline: { type: Boolean, default: false },
-    walletBalance: { type: Number, default: 0 } // cents-free simple USD balance for the payment sandbox
+    walletBalance: { type: Number, default: 0 }, // cents-free simple USD balance for the payment sandbox
+    twoFactorEnabled: { type: Boolean, default: false }
   },
   options
 );

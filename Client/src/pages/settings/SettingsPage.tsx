@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { User, Lock, Bell, Globe, Palette, CreditCard } from 'lucide-react';
 import { Card, CardHeader, CardBody } from '../../components/ui/Card';
 import { Input } from '../../components/ui/Input';
@@ -6,10 +6,27 @@ import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
 import { Avatar } from '../../components/ui/Avatar';
 import { useAuth } from '../../context/AuthContext';
+import { api } from '../../lib/api';
+import toast from 'react-hot-toast';
 
 export const SettingsPage: React.FC = () => {
   const { user } = useAuth();
-  
+  const [twoFactorEnabled, setTwoFactorEnabled] = useState(user?.twoFactorEnabled || false);
+  const [toggling, setToggling] = useState(false);
+
+  const handleToggle2FA = async () => {
+    setToggling(true);
+    try {
+      const { user: updated } = await api.toggle2FA(!twoFactorEnabled);
+      setTwoFactorEnabled(updated.twoFactorEnabled);
+      toast.success(updated.twoFactorEnabled ? '2FA enabled' : '2FA disabled');
+    } catch (err) {
+      toast.error((err as Error).message);
+    } finally {
+      setToggling(false);
+    }
+  };
+
   if (!user) return null;
   
   return (
@@ -135,11 +152,15 @@ export const SettingsPage: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-gray-600">
-                      Add an extra layer of security to your account
+                      Add an extra layer of security to your account. When enabled, you'll enter a one-time code at login (sandbox — code is shown on screen, not really emailed/texted).
                     </p>
-                    <Badge variant="error" className="mt-1">Not Enabled</Badge>
+                    <Badge variant={twoFactorEnabled ? 'success' : 'error'} className="mt-1">
+                      {twoFactorEnabled ? 'Enabled' : 'Not Enabled'}
+                    </Badge>
                   </div>
-                  <Button variant="outline">Enable</Button>
+                  <Button variant="outline" onClick={handleToggle2FA} disabled={toggling}>
+                    {toggling ? 'Updating...' : twoFactorEnabled ? 'Disable' : 'Enable'}
+                  </Button>
                 </div>
               </div>
               

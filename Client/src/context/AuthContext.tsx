@@ -26,10 +26,32 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     init();
   }, []);
 
-  const login = async (email: string, password: string, role: UserRole): Promise<void> => {
+  const login = async (email: string, password: string, role: UserRole) => {
     setIsLoading(true);
     try {
-      const { token, user: loggedInUser } = await api.login(email, password, role);
+      const result = await api.login(email, password, role);
+
+      if (result.requires2FA) {
+        setIsLoading(false);
+        return { requires2FA: true, userId: result.userId };
+      }
+
+      setToken(result.token);
+      setUser(result.user);
+      toast.success('Successfully logged in!');
+      return { requires2FA: false };
+    } catch (error) {
+      toast.error((error as Error).message);
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const verify2FA = async (userId: string, code: string): Promise<void> => {
+    setIsLoading(true);
+    try {
+      const { token, user: loggedInUser } = await api.verify2FACode(userId, code);
       setToken(token);
       setUser(loggedInUser);
       toast.success('Successfully logged in!');
@@ -98,6 +120,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const value = {
     user,
     login,
+    verify2FA,
     register,
     logout,
     forgotPassword,

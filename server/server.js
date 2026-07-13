@@ -1,7 +1,12 @@
 require('dotenv').config();
 const express = require('express');
+const http = require('http');
 const cors = require('cors');
+const helmet = require('helmet');
+const mongoSanitize = require('express-mongo-sanitize');
+const rateLimit = require('express-rate-limit');
 const connectDB = require('./config/db');
+const attachSignaling = require('./signaling');
 
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
@@ -19,8 +24,22 @@ const app = express();
 connectDB();
 
 // Core middleware
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: 'cross-origin' } // frontend (5173) and backend (5000) are different origins
+})); // sets safer HTTP headers (X-Content-Type-Options, etc.)
 app.use(cors({ origin: process.env.CLIENT_URL || '*' }));
 app.use(express.json());
+app.use(mongoSanitize()); // strips $ and . from req.body/query/params to block NoSQL injection
+
+// Rate limit auth endpoints specifically — the highest-value target for brute force
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 20, // 20 requests per window per IP
+  message: { message: 'Too many attempts, please try again later' },
+  standardHeaders: true,
+  legacyHeaders: false
+});
+app.use('/api/auth', authLimiter);
 
 // Health check
 app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
@@ -46,4 +65,6 @@ app.use((err, req, res, next) => {
 });
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Nexus server running on port ${PORT}`));
+const httpServer = http.createServer(app);
+attachSignaling(httpServer);
+httpServer.listen(PORT, () => console.log(`Nexus server running on port ${PORT} (HTTP + WebRTC signaling)`));
