@@ -56,7 +56,7 @@ export const PaymentsPage: React.FC = () => {
 
     setSubmitting(true);
     try {
-      let result;
+      let result: { transaction: any; walletBalance: number };
       if (activeForm === 'deposit') {
         result = await api.deposit(numAmount);
       } else if (activeForm === 'withdraw') {
@@ -68,6 +68,9 @@ export const PaymentsPage: React.FC = () => {
           return;
         }
         result = await api.transfer(recipientId, numAmount);
+      } else {
+        setSubmitting(false);
+        return;
       }
       setBalance(result.walletBalance);
       setTransactions(prev => [result.transaction, ...prev]);
@@ -110,14 +113,14 @@ export const PaymentsPage: React.FC = () => {
       </div>
 
       {/* Wallet balance */}
-      <Card className="bg-primary-600 text-white">
+      <Card className="bg-primary-600 text-black/70">
         <CardBody className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="p-3 bg-white/20 rounded-full">
               <Wallet size={28} />
             </div>
             <div>
-              <p className="text-sm text-primary-100">Wallet Balance</p>
+              <p className="text-black text-primary-100">Wallet Balance</p>
               <p className="text-3xl font-bold">${balance.toLocaleString()}</p>
             </div>
           </div>
@@ -125,7 +128,7 @@ export const PaymentsPage: React.FC = () => {
           <div className="flex gap-2">
             <Button
               variant="outline"
-              className="bg-white/10 border-white/30 text-white hover:bg-white/20"
+              className="bg-black/30 border-black/70 text-white hover:bg-black/40"
               leftIcon={<ArrowDownCircle size={18} />}
               onClick={() => setActiveForm('deposit')}
             >
@@ -133,7 +136,7 @@ export const PaymentsPage: React.FC = () => {
             </Button>
             <Button
               variant="outline"
-              className="bg-white/10 border-white/30 text-white hover:bg-white/20"
+              className="bg-black/30 border-black/70 text-white hover:bg-black/30"
               leftIcon={<ArrowUpCircle size={18} />}
               onClick={() => setActiveForm('withdraw')}
             >
@@ -141,7 +144,7 @@ export const PaymentsPage: React.FC = () => {
             </Button>
             <Button
               variant="outline"
-              className="bg-white/10 border-white/30 text-white hover:bg-white/20"
+              className="bg-black/30 border-black/70 text-white hover:bg-black/40"
               leftIcon={<Send size={18} />}
               onClick={() => setActiveForm('transfer')}
             >
