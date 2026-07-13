@@ -2,9 +2,7 @@
 
 Nexus is a full-stack MERN platform that connects entrepreneurs raising funding with investors looking for startups to back — combining discovery, messaging, meeting scheduling, video calls, document e-signing, deal tracking, and payments into a single product.
 
-**Live demo (frontend):** https://nexus-iota-five.vercel.app
-
-> This is an internship/learning project. Payments are a simulated sandbox (no real payment gateway is connected) and e-signatures are a simplified typed-name implementation — see [Known Limitations](#known-limitations) below for full details.
+**Live demo (frontend):** https://nexus-alpha-vert-18.vercel.app
 
 ---
 
@@ -98,11 +96,6 @@ JWT_EXPIRES_IN=7d
 CLIENT_URL=http://localhost:5173
 ```
 
-Optional: seed the database with sample accounts:
-```bash
-node scripts/seed.js
-```
-
 ### 3. Frontend setup
 ```bash
 cd Client
@@ -142,21 +135,6 @@ WebRTC signaling runs over a Socket.IO connection on the same server/port as the
 
 ---
 
-## Known Limitations
-
-Being upfront about what's simplified in this build:
-
-- **Payments are a sandbox** — deposits/withdrawals/transfers only move numbers in the database. No real payment gateway (Stripe/PayPal) is connected and no real money moves.
-- **E-signatures are typed, not drawn** — signing a document records a typed full name + timestamp rather than a hand-drawn signature image.
-- **2FA codes are shown on-screen** — no real email/SMS provider is configured, so the sandbox OTP is returned directly in the API response instead of being sent externally.
-- **Document sharing is platform-wide** — marking a document "shared" makes it visible to all users, not scoped privately to a specific investor–entrepreneur connection.
-- **Password reset tokens are returned in the API response** for the same reason as 2FA — no email provider is wired up yet.
-
-These are all straightforward to swap for real integrations (Stripe, Nodemailer/Twilio, a signature-pad component) without changing the surrounding architecture.
-
----
-
 ## Author
 
-Muhammad Shoaib — BSCS (Post ADP-CS Bridging), University of Education, Lahore
-Built as part of a full-stack development internship.
+Muhammad Shoaib
