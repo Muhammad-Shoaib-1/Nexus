@@ -1,4 +1,5 @@
 import React from 'react';
+import { cn } from '../../lib/utils';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'accent' | 'outline' | 'ghost' | 'link' | 'success' | 'warning' | 'error';
 export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
@@ -58,7 +59,15 @@ export const Button: React.FC<ButtonProps> = ({
   // Disabled state
   const disabledClass = disabled ? 'opacity-50 cursor-not-allowed pointer-events-none' : '';
   
-  const combinedClassName = `${baseStyles} ${sizeStyles[size]} ${variantStyles[variant]} ${widthClass} ${loadingClass} ${disabledClass} ${className}`;
+  const combinedClassName = cn(
+    baseStyles,
+    sizeStyles[size],
+    variantStyles[variant],
+    widthClass,
+    loadingClass,
+    disabledClass,
+    className
+  );
   
   return (
     <button
